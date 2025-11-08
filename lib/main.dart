@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import  'package:flutter/src/widgets/gesture_detector.dart';
+import 'package:flutter/src/widgets/gesture_detector.dart';
 
 void main() {
   runApp(MyApp());
@@ -41,34 +41,40 @@ class _MyAppState extends State<MyApp> {
 
 // Custom FAB that resembles the colorful and draggable Tumblr FAB
 class TumblrFloatingActionButton extends StatefulWidget {
-  const TumblrFloatingActionButton({
-    super.key,
-  });
+  const TumblrFloatingActionButton({super.key});
 
   @override
-  State<TumblrFloatingActionButton> createState() => _TumblrFloatingActionButtonState();
+  State<TumblrFloatingActionButton> createState() =>
+      _TumblrFloatingActionButtonState();
 }
 
-class _TumblrFloatingActionButtonState extends State<TumblrFloatingActionButton> {
+// set the initial position to topStart of the stack
+Offset _position = Offset.zero;
+
+class _TumblrFloatingActionButtonState
+    extends State<TumblrFloatingActionButton> {
   @override
   Widget build(BuildContext context) {
     // stack automatically positions topStart, wrap with Positioned to override
     return Positioned(
-      // typical FAB position
-      bottom: 0,
-      right: 0,
-      // Allows us to move FAB
+      // set the FAB position to where the user moves it
+      left: _position.dx,
+      top: _position.dy,
+      // Allows us to track user interaction with the FAB
       child: GestureDetector(
+        onPanUpdate: (details) {
+          // redraw the UI with the current state
+          setState(() {
+            // update offset to the change in position that the user drags it
+            _position += details.delta;
+          });
+        }, //onPanUpdate
         child: FloatingActionButton(
-          onPressed: (){},
+          onPressed: () {},
           backgroundColor: Colors.redAccent,
-          child: Icon(
-            Icons.add,
-            color: Colors.white,
-          ),
+          child: Icon(Icons.add, color: Colors.white),
         ),
       ),
     );
   }
 }
-
